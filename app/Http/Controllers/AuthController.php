@@ -80,6 +80,12 @@ class AuthController extends Controller
         return view('auth.album', compact('albums'));
     }
 
+    public function manageAlbum($id)
+    {
+        $album = Album::find($id);
+        return view('auth.manageAlbum', compact('album'));
+    }
+
     public function storeAlbum(Request $request)
     {
         $album = Album::create([

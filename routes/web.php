@@ -30,6 +30,9 @@ Route::get('/album', [AuthController::class, 'showAlbum'])->name('album')->middl
 // Route::get('/album/{id}', [AuthController::class, 'showAlbum'])->name('album')->middleware('auth')->middleware('auth');
 Route::get('/gallery', [AuthController::class, 'showGallery'])->name('gallery')->middleware('auth');
 Route::post('/album', [AuthController::class, 'storeAlbum'])->name('album.store')->middleware('auth');
-Route::get('/album/{id}/edit', [AuthController::class, 'editAlbum'])->name('album.edit')->middleware('auth');
+Route::get('/album/manage/{id}', [AuthController::class, 'manageAlbum'])->name('album.manage')->middleware('auth');
+// Route::post('/album/show/{id}', [AuthController::class, 'showAlbum'])->name('album.show')->middleware('auth');
+// Route::get('/album/createoreAlbum'])->name('album.show')->middleware('auth');
+Route::get('/album/edit/{id}', [AuthController::class, 'editAlbum'])->name('album.edit')->middleware('auth');
 Route::put('/album/{id}', [AuthController::class, 'updateAlbum'])->name('album.update')->middleware('auth');
 Route::delete('/album/{id}', [AuthController::class, 'deleteAlbum'])->name('album.delete')->middleware('auth');

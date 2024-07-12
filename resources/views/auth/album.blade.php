@@ -19,6 +19,8 @@
         border: 1px solid black;
         margin: 3px;
         display: inline-block;
+        /* display: flexbox; */
+        /* flex-wrap: wrap; */
     }
 
     .close-btn {
@@ -54,15 +56,31 @@
         align-items: center;
         text-align: center;
     }
+
+    .album-name {
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.3);
+        align-self: flex-end;
+        position: relative;
+        bottom: -25px;
+        width: 100%;
+        color: black;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 50px;
+    }
 </style>
 <h2>Album</h2>
 <div id="album-cover">
-    <?php //$albums = [1, 2, 3, 4] 
-    ?>
     @foreach ($albums as $album)
-    <div class="album-item">
+    @php
+    $count = \App\Models\Photo::where('album_id', $album->id)->count()
+    @endphp
+
+    <div class="album-item" data-id="{{ $album->id }}">
         <a href="#" class="close-btn">X</a>
         <a href="#" class="plus-hidden">+</a>
+        <div class="album-name">{{ $count == 0 ? 'Empty Album' : $album->title }}</div>
     </div>
     @endforeach
     <div class="album-item center-box">
@@ -100,6 +118,12 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
+        $(".album-item").click(function() {
+            var album_id = $(this).attr("data-id");
+            // alert(album_id);
+            window.location.href = '/album/manage/' + album_id;
+        });
+
         $("#plus").click(function(e) {
             // $("#plus").attr("data-target", "#exampleModal");
             $("#title").val("");
@@ -132,6 +156,12 @@
             //         location.reload();
             //     }
             // });
+        });
+
+        $("#exampleModal").on("hidden.bs.modal", function() {
+            // put your default event here
+            $("#title").val("");
+            $("#status").val("");
         });
     });
 </script>
