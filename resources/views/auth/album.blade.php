@@ -9,7 +9,7 @@
         border: 1px solid black;
         margin: auto;
         padding: 20px;
-        /* text-align: center; */
+        overflow: auto;
     }
 
     .album-item {
@@ -19,6 +19,7 @@
         border: 1px solid black;
         margin: 3px;
         display: inline-block;
+        float: left;
         /* display: flexbox; */
         /* flex-wrap: wrap; */
     }
@@ -59,7 +60,7 @@
 
     .album-name {
         height: 50px;
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(200, 200, 200, 0.8);
         align-self: flex-end;
         position: relative;
         bottom: -25px;
@@ -74,10 +75,17 @@
 <div id="album-cover">
     @foreach ($albums as $album)
     @php
-    $count = \App\Models\Photo::where('album_id', $album->id)->count()
+    $photo = \App\Models\Photo::where('album_id', $album->id);
+    $count = $photo->count();
+    $firstPhoto = '';
+    $bgImage = '';
+    if($count > 0) {
+        $firstPhoto = $photo->first()->url;
+        $bgImage = 'background-image: url(thumbnail/'.$firstPhoto.')';
+    }
     @endphp
 
-    <div class="album-item" data-id="{{ $album->id }}">
+    <div class="album-item" data-id="{{ $album->id }}" style="{{$bgImage}}; background-repeat: no-repeat; background-size: cover;">
         <a href="#" class="close-btn">X</a>
         <a href="#" class="plus-hidden">+</a>
         <div class="album-name">{{ $count == 0 ? 'Empty Album' : $album->title }}</div>

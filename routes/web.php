@@ -31,8 +31,13 @@ Route::get('/album', [AuthController::class, 'showAlbum'])->name('album')->middl
 Route::get('/gallery', [AuthController::class, 'showGallery'])->name('gallery')->middleware('auth');
 Route::post('/album', [AuthController::class, 'storeAlbum'])->name('album.store')->middleware('auth');
 Route::get('/album/manage/{id}', [AuthController::class, 'manageAlbum'])->name('album.manage')->middleware('auth');
+Route::post('/album/manage', [AuthController::class, 'manageAlbum'])->name('album.manage')->middleware('auth');
 // Route::post('/album/show/{id}', [AuthController::class, 'showAlbum'])->name('album.show')->middleware('auth');
 // Route::get('/album/createoreAlbum'])->name('album.show')->middleware('auth');
 Route::get('/album/edit/{id}', [AuthController::class, 'editAlbum'])->name('album.edit')->middleware('auth');
 Route::put('/album/{id}', [AuthController::class, 'updateAlbum'])->name('album.update')->middleware('auth');
 Route::delete('/album/{id}', [AuthController::class, 'deleteAlbum'])->name('album.delete')->middleware('auth');
+Route::post('/photo', [AuthController::class, 'storePhoto'])->name('photo.store')->middleware('auth');
+Route::post('/photo/delete', [AuthController::class, 'deletePhoto'])->name('photo.delete')->middleware('auth');
+// Route::delete('/posts/{post}', PostController::class .'@destroy')->name('posts.destroy');
+

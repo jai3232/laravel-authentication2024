@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Album;
+use App\Models\Photo;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -80,10 +81,17 @@ class AuthController extends Controller
         return view('auth.album', compact('albums'));
     }
 
-    public function manageAlbum($id)
+    public function manageAlbum($id = 0)
     {
+        if (\Request::isMethod('post'))
+        {
+            $post = \Request::post();
+            Album::where('id', $post['id'])->update(['title' => $post['title'], 'status' => $post['status']]);
+            $id = $post['id'];
+        }
         $album = Album::find($id);
-        return view('auth.manageAlbum', compact('album'));
+        $photos = Photo::where('album_id', $id)->get();
+        return view('auth.manageAlbum', compact('album', 'photos'));
     }
 
     public function storeAlbum(Request $request)
@@ -98,7 +106,57 @@ class AuthController extends Controller
 
     public function showGallery()
     {
-        return view('auth.gallery');
+        $albums = Album::where('status', 'public')->get();
+        return view('auth.gallery', compact('albums'));
+    }
+
+    public function storePhoto(Request $request)
+    {   $request->validate([
+            'files' => 'required|array|min:1',
+            'files.*' => 'required|file|max:2048' // Adjust validation rules as needed
+        ]);
+        if($request->hasFile('files'))
+            $files = $request->file('files');
+        $thumbPath = public_path('thumbnail');
+        foreach ($files as $file) {
+            $img = imagecreatefromstring(file_get_contents($file->getRealPath()));
+            $width = imagesx($img);
+            $height = imagesy($img);
+            $originalFilename = $file->getClientOriginalName();
+            $filename = time() . '-' . $originalFilename;
+            if($width > 600 && $height > 600) {
+                $tmpImg = imagecreatetruecolor(600, 600);
+                imagecopyresampled($tmpImg, $img, 0, 0, 0, 0, 600, 600, $width, $height);
+                imagejpeg($tmpImg, $thumbPath.'/'.$filename);
+            }
+            else
+                $file->move($thumbPath, $filename);
+            // $file->move(public_path('images'), $filename);
+            Photo::create(['url' => $filename, 'album_id' => $request->album_id]);
+        }
+        // return $originalFilename;
+        // return $request;
+        // $request->validate([
+        //     'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        // ]);
+        // return true;// $request->album_id;
+        // $imageName = time().'.'.$request->file->extension(); 
+        // $request->file->move(public_path('images'), $imageName);
+        // Photo::create(['url' => $imageName, 'album_id' => $request->album_id]);
+
+        return response()->json(['success'=>'Image uploaded successfully.']);
+
+        return $_FILES;
+    }
+
+    public function deletePhoto(Request $request)
+    {
+        // return public_path('images').'/'.Photo::find($request->id)->url;
+        // unlink(public_path('images').'/'.Photo::find($request->id)->url);
+        unlink(public_path('thumbnail').'/'.Photo::find($request->id)->url);
+        Photo::find($request->id)->delete();
+
+        return true;
     }
 
     public function showUser()
