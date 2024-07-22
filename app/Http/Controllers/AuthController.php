@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Album;
 use App\Models\Photo;
+use App\Models\PhotoLike;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -171,6 +172,22 @@ class AuthController extends Controller
         Photo::find($request->id)->delete();
 
         return true;
+    }
+
+    public function likePhoto(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $photo = PhotoLike::where('photo_id', $request->photo_id)->where('user_id', Auth::user()->id)->first();
+            if(!$photo)
+                PhotoLike::create(['photo_id' => $request->photo_id, 'user_id' => Auth::user()->id, 'liked' => 1]);
+            // else
+            //     $photo->delete();
+            // return true;
+        }
+        if(!empty(Photo::find($request->photo_id)))
+            return count(Photo::find($request->photo_id)->likes);
+        return $request->photo_id;
+        return $_POST;
     }
 
     public function showUser()

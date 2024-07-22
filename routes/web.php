@@ -40,6 +40,8 @@ Route::put('/album/{id}', [AuthController::class, 'updateAlbum'])->name('album.u
 Route::delete('/album/{id}', [AuthController::class, 'deleteAlbum'])->name('album.delete')->middleware('auth');
 Route::post('/photo', [AuthController::class, 'storePhoto'])->name('photo.store')->middleware('auth');
 Route::post('/photo/delete', [AuthController::class, 'deletePhoto'])->name('photo.delete')->middleware('auth');
+Route::post('/photo/like', [AuthController::class, 'likePhoto'])->middleware('auth');
+Route::get('/photo/like', [AuthController::class, 'likePhoto'])->middleware('auth');
 Route::get('/photo/list/{id}', [AuthController::class, 'listPhoto'])->name('photo.list');//->middleware('auth');
 // Route::delete('/posts/{post}', PostController::class .'@destroy')->name('posts.destroy');
 
