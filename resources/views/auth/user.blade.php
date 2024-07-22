@@ -12,7 +12,7 @@
             <th>Name</th>
             <th>Album</th>
             <th>Photos</th>
-            <th>Like</th>
+            <th>Likes</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -21,9 +21,21 @@
         <tr>
             <td>{{ $user->id }}</td>
             <td>{{ $user->name }}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            @php 
+            $albums = \App\Models\Album::where('user_id', $user->id);
+            $totalPhotos = 0;
+            $totalLikes = 0;
+            foreach($albums->get() as $album) {
+                $totalPhotos += $album->photos->count();
+                $photos = \App\Models\Photo::where('album_id', $album->id);
+                foreach($photos->get() as $photo) {
+                    $totalLikes += $photo->likes->count();
+                }
+            }
+            @endphp
+            <td>{{ $albums->count() }}</td>
+            <td>{{ $totalPhotos }}</td>
+            <td>{{ $totalLikes }}</td>
             <td><a href="#" class="btn btn-warning">Delete</a></td>
         </tr>
         @endforeach
