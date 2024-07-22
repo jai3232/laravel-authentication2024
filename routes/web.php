@@ -28,7 +28,8 @@ Route::get('/home', [AuthController::class, 'home'])->name('home')->middleware('
 Route::get('/user', [AuthController::class, 'showUser'])->name('user')->middleware('auth');
 Route::get('/album', [AuthController::class, 'showAlbum'])->name('album')->middleware('auth');
 // Route::get('/album/{id}', [AuthController::class, 'showAlbum'])->name('album')->middleware('auth')->middleware('auth');
-Route::get('/gallery', [AuthController::class, 'showGallery'])->name('gallery')->middleware('auth');
+Route::get('/gallery', [AuthController::class, 'gallery'])->name('gallery')->middleware('auth');
+Route::get('/gallery/show/{id}', [AuthController::class, 'showGallery'])->name('show.gallery')->middleware('auth');
 Route::post('/album', [AuthController::class, 'storeAlbum'])->name('album.store')->middleware('auth');
 Route::get('/album/manage/{id}', [AuthController::class, 'manageAlbum'])->name('album.manage')->middleware('auth');
 Route::post('/album/manage', [AuthController::class, 'manageAlbum'])->name('album.manage')->middleware('auth');
@@ -39,5 +40,6 @@ Route::put('/album/{id}', [AuthController::class, 'updateAlbum'])->name('album.u
 Route::delete('/album/{id}', [AuthController::class, 'deleteAlbum'])->name('album.delete')->middleware('auth');
 Route::post('/photo', [AuthController::class, 'storePhoto'])->name('photo.store')->middleware('auth');
 Route::post('/photo/delete', [AuthController::class, 'deletePhoto'])->name('photo.delete')->middleware('auth');
+Route::get('/photo/list/{id}', [AuthController::class, 'listPhoto'])->name('photo.list');//->middleware('auth');
 // Route::delete('/posts/{post}', PostController::class .'@destroy')->name('posts.destroy');
 

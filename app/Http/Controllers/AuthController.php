@@ -104,10 +104,24 @@ class AuthController extends Controller
         return true;
     }
 
-    public function showGallery()
+    public function gallery()
     {
         $albums = Album::where('status', 'public')->get();
         return view('auth.gallery', compact('albums'));
+    }
+
+    public function showGallery($id)
+    {
+        $photos = Photo::where('album_id', $id)->get();
+        return view('auth.showGallery2', compact('photos'));
+    }
+
+    public function listPhoto($id)
+    {
+        $albums = Photo::where('album_id', $id)->get();
+        return $albums;
+        return response()->json(compact('token'))->header("Access-Control-Allow-Origin",  "*");
+
     }
 
     public function storePhoto(Request $request)

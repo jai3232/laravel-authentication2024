@@ -95,11 +95,17 @@
     </div>
     @endif
     @endforeach
-    <!-- <div class="album-item center-box">
-        <a href="#" id="plus" data-toggle="modal" data-target="#exampleModal">+</a>
-        <!-- <div class="plus"></div> -->
-    </div> -->
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".album-item").click(function() {
+            var album_id = $(this).attr("data-id");
+            // alert(album_id);
+            window.location.href = '/gallery/show/' + album_id;
+        });
+    });
+</script>
 
 
 @endsection
